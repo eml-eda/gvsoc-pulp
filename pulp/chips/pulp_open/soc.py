@@ -83,7 +83,7 @@ class Soc(st.Component):
         fll_cluster = Fll(self, 'fll_cluster')
 
         # FC
-        fc = iss.FcCore(self, 'fc')
+        fc = iss.FcCore(self, 'fc', power_models_file="pulp/chips/pulp_open/power_models/core/riscy.json")
 
         # FC ITC
         fc_itc = itc.Itc_v1(self, 'fc_itc')

@@ -5,11 +5,14 @@
         "base": "0x10000000",
         "size": "0x00400000"
     },
-
+    "power_models_file": "pulp/chips/pulp_open/power_models/cluster.json",
     "version": 5,
     "json_file": "cluster_v6",
     "nb_pe": 9,
     "has_cc": true,
+    "iss_config": {
+        "power_models_file": "pulp/chips/pulp_open/power_models/core/riscy.json"
+    },
 
     "pe": {
         "irq": [

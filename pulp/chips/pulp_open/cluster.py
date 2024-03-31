@@ -68,6 +68,7 @@ class Cluster(st.Component):
         #
 
         self.add_properties(self.load_property_file(config_file))
+        self.add_properties({ 'power_models': self.load_property_file(self.get_property("power_models_file"))})
 
         nb_pe               = self.get_property('nb_pe', int)
         cluster_size        = self.get_property('mapping/size', int)
@@ -94,7 +95,7 @@ class Cluster(st.Component):
         # Cores
         pes = []
         for i in range(0, nb_pe):
-            pes.append(iss.ClusterCore(self, 'pe%d' % i, cluster_id=cid, core_id=i))
+            pes.append(iss.ClusterCore(self, 'pe%d' % i, power_models_file=self.get_property('iss_config')["power_models_file"],cluster_id=cid, core_id=i))
 
         # Icache
         icache = Hierarchical_cache(self, 'icache', self.get_property('icache/config'))
@@ -112,7 +113,7 @@ class Cluster(st.Component):
         demux_periph_ico = Router(self, 'demux_periph_ico')
 
         # MCHAN
-        mchan = Mchan(self, 'dma', nb_channels=nb_pe+1)
+        mchan = Mchan(self, 'dma', nb_channels=nb_pe+1, power_models_file="pulp/chips/pulp_open/power_models/mchan.json")
 
         # Timer
         timer = Timer(self, 'timer')

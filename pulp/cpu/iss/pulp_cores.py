@@ -46,13 +46,16 @@ _fc_isa = __build_isa('pulp_fc')
 class PulpCore(cpu.iss.riscv.RiscvCommon):
 
     def __init__(self, parent, name, isa, cluster_id: int, core_id: int, fetch_enable: bool=False,
-            boot_addr: int=0, external_pccr: bool=False):
+            boot_addr: int=0, external_pccr: bool=False,power_models: dict={},
+            power_models_file: str=None):
 
         super().__init__(parent, name, isa=isa,
             riscv_dbg_unit=True, fetch_enable=fetch_enable, boot_addr=boot_addr,
             first_external_pcer=12, debug_handler=0x1a190800, misa=0x40000000, core="ri5ky",
             cluster_id=cluster_id, core_id=core_id, wrapper="pulp/cpu/iss/pulp_iss_wrapper.cpp",
-            scoreboard=True, timed=True, handle_misaligned=True, external_pccr=external_pccr)
+            scoreboard=True, timed=True, handle_misaligned=True, external_pccr=external_pccr,
+            power_models=power_models,
+            power_models_file=power_models_file,)
 
         self.add_c_flags([
             "-DPIPELINE_STALL_THRESHOLD=1",
@@ -65,15 +68,19 @@ class PulpCore(cpu.iss.riscv.RiscvCommon):
 
 class ClusterCore(PulpCore):
 
-    def __init__(self, parent, name, cluster_id: int=None, core_id: int=None):
+    def __init__(self, parent, name, cluster_id: int=None, core_id: int=None,
+                 power_models: dict={},power_models_file: str=None):
 
-        super().__init__(parent, name, isa=_cluster_isa, cluster_id=cluster_id, core_id=core_id, external_pccr=True)
+        super().__init__(parent, name, isa=_cluster_isa, cluster_id=cluster_id, core_id=core_id, external_pccr=True,
+                         power_models=power_models,power_models_file=power_models_file)
 
 
 
 class FcCore(PulpCore):
 
-    def __init__(self, parent, name, fetch_enable: bool=False, boot_addr: int=0):
+    def __init__(self, parent, name, fetch_enable: bool=False, boot_addr: int=0,
+                 power_models: dict={},power_models_file: str=None):
 
         super().__init__(parent, name, isa=_fc_isa, cluster_id=31, core_id=0,
-            fetch_enable=fetch_enable, boot_addr=boot_addr)
+            fetch_enable=fetch_enable, boot_addr=boot_addr,
+            power_models=power_models,power_models_file=power_models_file)
